@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<dl>
+			<dt>updat和enter</dt>
+			<dd>update 部分的处理办法一般是：更新属性值</dd>
+			<dd>enter 部分的处理办法一般是：添加元素后，赋予属性值</dd>
+		</dl>
+		<p>a</p>
+		<p>b</p>
+		<p>c</p>
+		<p>--------------------------------------</p>
+		<dl>
+			<dt>update和exit</dt>
+			<dd></dd>
+		</dl>
+		
+		<div>1</div>
+		<div>2</div>
+		<div>3</div>
+		<div>4</div>
+		<div>5</div>
+	</body>
+	<script type="text/javascript" src="js/d3.min.js"></script>
+	<script type="text/javascript">
+		var dataset = [ 3 , 6 , 9 , 12 , 15 ];
+		
+		//选择body中的p元素
+		var p = d3.select("body").selectAll("p");
+		
+		//获取update部分
+		var update = p.data(dataset);
+		
+		//获取enter部分
+		var enter = update.enter();
+		
+		//update部分的处理：更新属性值
+		update.text(function(d){
+		    return "update " + d;
+		});
+		
+		//enter部分的处理：添加元素后赋予属性值
+			enter.append("p")
+		    .text(function(d){
+		        return "enter " + d;
+		    });
+		    
+		    //update和exit  绑定数据数量 < 对应元素 
+		    var dataSet=[3];
+		    //选择body中的p元素
+		    var getElm=d3.selectAll("div");		     
+		    //获取update部分
+		    var update=getElm.data(dataSet);
+		    //获取exit部分
+		    var exit=update.exit();
+		    //update部分的处理：更新属性值
+		    update.text(function(d){
+		    	return "update"+d;
+		    });	    
+		    //exit部分的处理：修改p元素的属性
+		    exit.text(function(){
+		    	return "exit";
+		    });
+		    //exit部分的处理通常是删除元素
+//			 exit.remove();
+		    
+	</script>
+</html>

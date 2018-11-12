@@ -1,0 +1,67 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>比例尺</title>
+	</head>
+	<body>
+	<dl>
+		<dt>线性比例尺</dt>
+		<dd>比例尺，很像数学中的函数。例如，对于一个一元二次函数，有 x 和 y 两个未知数，当 x 的值确定时，y 的值也就确定了。
+<br />
+在数学中，x 的范围被称为定义域，y 的范围被称为值域。
+<br />
+D3 中的比例尺，也有定义域和值域，分别被称为 domain 和 range。开发者需要指定 domain 和 range 的范围，如此即可得到一个计算关系</dd>		
+<dt>线性比例尺</dt>
+		<dd>线性比例尺，能将一个连续的区间，映射到另一区间。要解决柱形图宽度的问题，就需要线性比例尺。</dd>
+		<dt>序数比例尺</dt>
+		<dd></dd>
+	</dl>
+	<p>实例</p>
+	</body>
+	<script type="text/javascript" src="js/d3.min.js"></script>
+	<script type="text/javascript">
+		//线性比例尺   domain() 和 range() 分别设定比例尺的定义域和值域
+		var dataset = [2.2, 2.3, 3.9, 1.5, 1,1.1,0.1];
+		var min=d3.min(dataset);
+		var max=d3.max(dataset);
+		var liner= d3.scale.linear()
+				.domain([0,max])
+				.range([0,300]);
+				
+				console.log("线性比例尺:"+liner(dataset[0]));
+				console.log("线性比例尺:"+liner(dataset[dataset.length-1]));
+				console.log("线性比例尺:"+liner(dataset[2]));
+		
+		//序数比例尺
+		var index = [0, 122, 2, 3, 4312];
+		var color = ["red", "blue", "green", "yellow", "black"];
+		var ordinal=d3.scale.ordinal()
+					.domain(index)
+					.range(color)
+				console.log("序数比例尺:"+ordinal(2));
+		
+		//实例
+		var rectWidth=25;
+		var svg=d3.select("body")
+				.append("svg")
+				.attr("width",1000)
+				.attr("height",1000)
+				.style("background","#252525")
+				
+				svg.selectAll("rect")
+					.data(dataset)
+					.enter()
+					.append("rect")
+					.attr("x",0)
+					.attr("y",function(d,i){
+						return i*rectWidth
+					})
+					.attr("width",function(d,i){
+						return liner(d);
+					})
+					.attr("height",rectWidth-5)
+					.attr("fill","yellow")
+	</script>
+	
+</html>

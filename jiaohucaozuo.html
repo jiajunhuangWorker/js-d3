@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{margin:0;padding:0;}
+		</style>
+	</head>
+	<body>
+	</body>
+	<script type="text/javascript" src="js/d3.min.js"></script>
+	<script type="text/javascript">
+		var initW=500,initH=500;
+		
+		var svg=d3.select("body")
+			.append("svg")
+			.attr("width",initW)
+			.attr("height",initH)
+//			.style("background","#f40")
+			
+			var padding={'left':30,"right":30,"top":20,"bottom":20};
+			var dataSet=[40,90,40,90,5,2,1,10];
+			
+			//初始化比例尺
+			var xScale=d3.scale.ordinal()
+				.domain(d3.range(dataSet.length))
+				.rangeRoundBands([0,initW-padding.left-padding.right]);
+			var yScale=d3.scale.linear()
+				.domain([0,d3.max(dataSet)])
+				.range([initH-padding.top-padding.bottom,0]);
+			//初始标尺
+			var xAxis=d3.svg.axis()
+				.scale(xScale)
+				.orient("bottom")
+			var yAxis=d3.svg.axis()
+				.scale(yScale)
+				.orient("left")
+			
+			var rectPadding=4;
+			//图形
+			var rect=svg.selectAll(".myRect")
+				.data(dataSet)
+				.enter()
+				.append("rect")
+				.attr("class","myRect")
+				.attr("transform","translate("+padding.left+","+padding.top+")")
+				.attr("x",function(d,i){
+					return xScale(i)+rectPadding/2;
+				})
+				.attr("y",function(d,i){
+					return yScale(d);
+				})
+				.attr("width",
+					xScale.rangeBand()-rectPadding
+				)
+				.attr("height",function(d){
+					return initH-padding.top-padding.bottom-yScale(d)
+				})
+				.attr("fill","bule")
+				.on("mouseover",function(d,i){
+					d3.select(this)
+					.attr("fill","yellow")
+				})
+				.on("mouseout",function(d,i){
+					d3.select(this)
+					.transition()
+					.duration(200)
+					.attr("fill","bule")
+				})
+				//text
+				var text=svg.selectAll(".myText")
+					.data(dataSet)
+					.enter()
+					.append("text")
+					.attr("class","myText")
+					.attr("transform","translate("+padding.left+","+padding.top+")")
+					.attr("x",function(d,i){
+						return xScale(i)+rectPadding/2
+					})
+					.attr("y",function(d,i){
+						return yScale(d)
+					})
+					.attr("dx",function(){
+						return (xScale.rangeBand()-rectPadding-15)/2;
+					})
+					.attr("dy",function(){
+						return 20;
+					}).text(function(d){
+						return d;
+					})
+					svg.append("g")
+						.attr("class","axis")
+						.attr("transform","translate("+padding.left+","+(initH-padding.bottom)+")")
+						.call(xAxis)
+					svg.append("g")
+						.attr("class","axis")
+						.attr("transform","translate("+padding.left+","+padding.top+")")
+						.call(yAxis)
+	</script>
+</html>

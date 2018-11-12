@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		
+	</head>
+	<body>		
+		<p>Apple</p>
+		<p>Pear</p>
+		<p>Banana</p>
+	</body>
+	<script type="text/javascript" src="js/d3.min.js"></script>
+	<script type="text/javascript">
+		var body=d3.select("body");
+		  var p=body.selectAll("p");
+		  p.datum("12345");
+		  p.text(function(d,i){
+		  	return  "第"+i+"个元素绑定了"+d;
+		  })
+		  //data
+		  var arr=[1,2,"隔壁的老黄","666"];
+		  p.data(arr)
+		  .text(function(d,i){
+		  	return d
+		  });
+		  
+	</script>
+</html>

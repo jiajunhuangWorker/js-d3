@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>坐标轴</title>
+	</head>
+	<body>
+		<dl>
+			<dt>坐标轴</dt>
+			<dd></dd>
+		</dl>
+		<style type="text/css">
+			.axis path,.axis line{
+				fill:none;
+				stroke: black;
+				shape-rendering:crispedges;
+			}
+			.axis text{
+				font-size: 11px;
+				font-family: "微软雅黑";
+			}
+		</style>
+	</body>
+	<script type="text/javascript" src="js/d3.min.js"></script>
+	<script type="text/javascript">
+		var dataset = [2.2, 2.3, 2, 20, 1,1.1,0.1,1.1,0.1];
+		var init=25;
+		//标尺
+		var inline=d3.scale.linear()
+			.domain([0,Math.ceil(d3.max(dataset))+1])
+			.range([0,700])
+		//刻度
+		var axis=d3.svg.axis()
+			.scale(inline)		//指定比例尺
+			.orient("bottom") //指定刻度方向
+			.ticks(9)   //刻度数量
+		//初始化画布
+		var svg=d3.select("body")
+				.append("svg")
+				.attr("width",1000)
+				.attr("height",1000)
+				.style("background","green")
+				//添加标识符
+				svg.append("g")
+					.attr("class","axis")
+					.attr("transform","translate(3,"+((dataset.length*init))+")")
+					.call(axis)
+			//创建柱形
+			svg.selectAll("rect")
+				.data(dataset)
+				.enter()
+				.append("rect")
+				.attr("x",0)
+				.attr("y",function(d,i){
+					return i*init
+				})
+				.attr("width",function(d,i){
+					return inline(d)
+				})
+				.attr("height",init-5)
+				.attr("fill","yellow")
+				
+				
+	</script>
+</html>

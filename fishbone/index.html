@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+  <head>
+    <title>d3 Fishbone diagram</title>
+    <meta charset="utf-8">
+    <style>
+      @import url("./style.css");
+    </style>
+  </head>
+  <body>
+  	<button id="loginBtn">记录坐标</button>
+  	<button id="reseLastBtn">还原上一次坐标</button>
+  	<button id="resetBtn">重置</button>
+  	<div class="box"></div>
+  	<div class="copy-last" style="display: none;"></div>
+  	<script type="text/javascript" src="jquery-1.9.1.min.js">    		
+  	</script>
+  
+  	<!--<script type="text/javascript" src="knockout-3.0.0.js">
+  		
+  	</script>-->
+    <script src="d3.min_old.js" charset="utf-8"></script>
+    <script src="./d3.fishbone.js" charset="utf-8"></script>
+    <script>
+      // create the configurable selection modifier
+      var fishbone = d3.fishbone();
+      var lineArry=[],textArry=[],LineNum=0,nodeNum=0;      
+      //start
+      playLayout();
+      //记录
+      $("#loginBtn").on("click",function(){
+      	if(!window.localStorage){
+						alert("sorry!不支持localStorage")
+					}else{
+						var coordinate=window.localStorage;														
+						coordinate.maps=$(".box").html();
+					}				
+      })
+      //加载上一次
+      $("#reseLastBtn").on("click",function(){
+      	getLastDom();
+      	
+      		
+      })
+      //重置
+      $("#resetBtn").on("click",function(){
+//				fishbone.force().linkStrength(1)
+//				d3.select('svg').remove();
+				location.reload()
+//				fishbone.force().on("tick", _defined)
+//				playLayout()
+      })
+      
+      
+      function playLayout(){
+      	// load the data
+		      d3.json("./data.json", function(data){
+		        // the most reliable way to get the screen size
+		        
+		        var size = (function(){
+		            return {width: this.clientWidth, height: this.clientHeight};
+		          }).bind(window.document.documentElement),
+		        	
+		        svg = d3.select(".box")
+		          .append("svg")
+		          // firefox needs a real size
+		          .attr(size())
+		          // set the data so the reusable chart can find it
+		          .datum(data)
+		          // set up the default arrowhead
+		          .call(fishbone.defaultArrow)
+		          // call the selection modifier
+		          .call(fishbone)
+		        	  
+		        // this is the actual `force`: just start it
+		        fishbone.force().start()         
+		       
+		        // handle resizing the window
+		        d3.select(window).on("resize", function(){
+		          fishbone.force()
+		            .size([size().width, size().height])
+		            .start();
+		          svg.attr(size())
+		        });
+		        
+		      });
+      }
+      function getLastDom(){
+      	fishbone.force().start();
+      	var coordinate=window.localStorage;
+      	var doms=coordinate.maps;
+      	$(".copy-last").empty();
+				$(".copy-last").append(doms);
+				nodeNum=$(".copy-last .node").length;
+				lineNum=$(".copy-last .link").length;
+//				$(".copy-last").find(".text0").attr("transform")
+//				$(".box").find(".text-1").attr("transform","translate(100,100)")				
+				textArry=[];
+				lineArry=[];
+				//node				
+				for(var i=0;i<nodeNum;i++){					
+					textArry.push($(".copy-last .node").eq(i).attr("transform"))
+				}
+				
+				for(var i=0;i<lineNum;i++){					
+					lineArry.push({"x1":$(".copy-last .link").eq(i).attr("x1"),"y1":$(".copy-last .link").eq(i).attr("y1"),"x2":$(".copy-last .link").eq(i).attr("x2"),"y2":$(".copy-last .link").eq(i).attr("y2")})
+				}				
+				for(var i in textArry){
+      				$(".box .node").eq(i).attr("transform",textArry[i]);
+        }					
+				for(var i in lineArry){
+      				$(".box .link").eq(i).attr({"x1":lineArry[i].x1,"y1":lineArry[i].y1,"x2":lineArry[i].x2,"y2":lineArry[i].y2});
+      }				
+				fishbone.force().stop();
+//				fishbone.force().resume();
+				
+      }
+    </script>
+  </body>
+</html>

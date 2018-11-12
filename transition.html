@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>过度</title>
+		
+	</head>
+	<body>
+		<dl>
+			<dt>过渡方法</dt>
+			<dd>transition()过渡的效果</dd>
+			<dd>duration(时间)</dd>
+			<dd>ease()过渡方式
+			<br />
+			linear：普通的线性变化
+			<br />circle：慢慢地到达变换的最终状态
+			<br />elastic：带有弹跳的到达最终状态
+			<br />bounce：在最终状态处弹跳几次			
+			<br />eg:调用时，格式形如： ease(“bounce”)。			
+			</dd>
+			<dd>
+				delay()指定延迟的时间
+				单位同样为毫秒。此函数可以对整体指定延迟，也可以对个别指定延迟。
+			</dd>
+		</dl>
+		
+	</body>
+	<script type="text/javascript" src="js/d3.min.js">
+	</script>
+	<script type="text/javascript">
+		var svg=d3.select("body")
+			.append("svg")
+			.attr("width",500)
+			.attr("height",500)
+//			.style("background","#252525")
+		
+		var circle1=svg.append("circle")
+			.attr("cx",100)
+			.attr("cy",200)
+			.attr("r",45)
+			.style("fill","green")		
+		
+		circle1.transition()
+			.duration(1000)
+			.attr("cx",300)
+			
+			var circle2=svg.append("circle")
+			.attr("cx",100)
+			.attr("cy",400)
+			.attr("r",25)
+			.style("fill","green")		
+		
+		circle2.transition()
+			.duration(1000)
+			.ease("bouncs")
+			.attr("cx",300)
+	</script>
+</html>

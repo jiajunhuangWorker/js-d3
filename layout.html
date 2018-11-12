@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<dl>
+			<dt>布局</dt>
+			<dd>布局的作用是：将不适合用于绘图的数据转换成了适合用于绘图的数据。</dd>
+			<dd>饼状图（Pie）、力导向图（Force）、弦图（Chord）、树状图（Tree）、集群图（Cluster）、捆图（Bundle）、打包图（Pack）、直方图（Histogram）、分区图（Partition）、堆栈图（Stack）、矩阵树图（Treemap）、层级图（Hierarchy）。</dd>
+		</dl>
+		<p>饼形图制造</p>
+		<dl>			
+			<dd>布局不是要直接绘图，而是为了得到绘图所需的数据。</dd>
+			<dd>获取数据->转换数据->绘图生成器(路径 path)-></dd>
+		</dl>
+		<div class="bxt"></div>
+		<p>力导向</p>
+		<dl>
+			<dt></dt>
+			<dd>力导向图中每一个节点都受到力的作用而运动，这种是一种非常绚丽的图表。</dd>
+			<dd>力导向图（Force-Directed Graph），是绘图的一种算法</dd>
+		</dl>
+		<div class="lbj"></div>
+		
+	</body>
+	<script type="text/javascript" src="js/d3.min.js">
+		
+	</script>
+	<script type="text/javascript">
+		//饼形图Start
+		//-获取数据
+		var dataSet=[40,20,10,30,40,90,5];
+		var initW=500,initH=500;
+		
+		//建立画布
+		var svg=d3.select(".bxt")
+			.append("svg")
+			.attr("width",initW)
+			.attr("height",initH)
+			.style("background","#252525")
+		//转换数据
+		var pie=d3.layout.pie();
+		var pieData=pie(dataSet);
+		//弧生成器
+		var outerRadius=150;//外半径
+		var innerRadius=0;//内半径,为0则中间没有空白
+		//弧生成器
+		var arc=d3.svg.arc()
+			.innerRadius(innerRadius)//内半径
+			.outerRadius(outerRadius)//外半径
+			
+		var color = d3.scale.category10();
+		//svg中添加元素
+		var arcs=svg.selectAll("g")
+			.data(pieData)
+			.enter()
+			.append("g")
+			.attr("transform","translate("+(initW/2)+","+(initH/2)+")")
+			
+		//添加路径
+		arcs.append("path")
+			.attr("fill",function(d,i){				
+				return color(i)
+			})
+			.attr("d",function(d){
+				return arc(d)//调用弧度器
+			})
+		
+		//
+		arcs.append("text")
+			.attr("transform",function(d){
+				return "translate("+arc.centroid(d)+")";
+			})
+			.attr("text-anchor","middle")
+			.text(function(d){
+				return d.data
+			})
+		//饼形图End
+		//力布局Start
+				   
+					   
+		var nodes = [ { name: "桂林"    }, { name: "广州" },
+					  { name: "厦门"    }, { name: "杭州"   },
+					  { name: "上海"   }, { name: "青岛"    },
+					  { name: "天津"    } ];
+					 
+		var edges = [  { source : 0  , target: 1 } , { source : 0  , target: 2 } ,
+					   { source : 0  , target: 3 } , { source : 1  , target: 4 } ,
+					   { source : 1  , target: 5 } , { source : 1  , target: 6 }  ];	
+			
+		
+		
+		var svg = d3.select(".lbj")
+					.append("svg")
+					.attr("width",initW)
+					.attr("height",initH);
+		
+		var force = d3.layout.force()
+				.nodes(nodes)		//指定节点数组
+				.links(edges)		//指定连线数组
+				.size([initW,initH])	//指定范围
+				.linkDistance(150)	//指定连线长度
+				.charge(-400);	//相互之间的作用力
+
+		force.start();	//开始作用
+
+		console.log(nodes);
+		console.log(edges);
+		
+		//添加连线		
+		var svg_edges = svg.selectAll("line")
+							.data(edges)
+							.enter()
+							.append("line")
+							.style("stroke","#ccc")
+							.style("stroke-width",1);
+		
+		var color = d3.scale.category20();
+				
+		//添加节点			
+		var svg_nodes = svg.selectAll("circle")
+							.data(nodes)
+							.enter()
+							.append("circle")
+							.attr("r",20)
+							.style("fill",function(d,i){
+								return color(i);
+							})
+							.call(force.drag);	//使得节点能够拖动
+
+		//添加描述节点的文字
+		var svg_texts = svg.selectAll("text")
+							.data(nodes)
+							.enter()
+							.append("text")
+							.style("fill", "black")
+							.attr("dx", 20)
+							.attr("dy", 8)
+							.text(function(d){
+								return d.name;
+							});
+					
+
+			force.on("tick", function(){	//对于每一个时间间隔
+			
+				 //更新连线坐标
+				 svg_edges.attr("x1",function(d){ return d.source.x; })
+				 		.attr("y1",function(d){ return d.source.y; })
+				 		.attr("x2",function(d){ return d.target.x; })
+				 		.attr("y2",function(d){ return d.target.y; });
+				 
+				 //更新节点坐标
+				 svg_nodes.attr("cx",function(d){ return d.x; })
+				 		.attr("cy",function(d){ return d.y; });
+	
+				 //更新文字坐标
+				 svg_texts.attr("x", function(d){ return d.x; })
+				 	.attr("y", function(d){ return d.y; });
+			});
+			  
+	        
+		//力布局End
+	</script>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		
+	</head>
+	<body>		
+		<p>Apple</p>
+		<p class="play">Pear</p>
+		<p class="play">Banana</p>
+	</body>
+	<script type="text/javascript" src="js/d3.min.js"></script>
+	<script type="text/javascript">
+		var body=d3.select("body");
+		  var p=body.selectAll("p");
+		  p.datum("12345");
+		  p.text(function(d,i){
+		  	return  "第"+i+"个元素绑定了"+d;
+		  })
+		  //data
+		  var arr=[1,2,"隔壁的老黄","666"];
+		  p.data(arr)
+		  .text(function(d,i){
+		  	return d
+		  });
+		  //style
+//		  p.style("color","red");
+			var plays=body.selectAll(".play");
+				plays.style("color","yellow");
+			//apply和insert 插入
+			body.append("p").text("我是使用append 插入的元素");
+			body.insert("p",".play").text("我是在.play前使用insert 插入的元素");
+			
+			//remove删除
+			var delData=body.selectAll(".play");
+			delData.remove();
+			
+			
+	</script>
+</html>
